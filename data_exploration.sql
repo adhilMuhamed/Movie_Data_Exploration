@@ -59,6 +59,49 @@ select * from customer where first_name like "a____%";
 #Find all customers whose first name starts with "a" and ends with "o"
 select * from customer where first_name like "a%o";
 
+#Display the actors name in Capital letters
+select upper(first_name) from actor;
+
+#Display all films whose title length is greater than 10 characters
+select * from film where length(title)>10;
+
+#Display the first eight characters of the film title
+select left(title,8) from film;
+
+#Combine first name and last name of all actors and display with a ‘-’ between them
+select concat(first_name,"-",last_name) as concat from actor;
+
+#smallest rental duration
+select min(rental_duration) from film;
+
+#the highest replacement cost amongst all the films
+select max(replacement_cost) from film;
+
+#What is the average length of the movie
+select avg(length) from film;
+
+#How many films did the actor with actor id 1 work in ?
+select count(film_id) from film_actor where actor_id=1;
+
+#What is the total replacement cost of the movies whose rating is G
+select sum(replacement_cost) from film where rating='G';
+
+#Query to find  the date difference between two given dates '2023-10-19', and '2023-10-23',
+SELECT DATEDIFF('2023-10-23', '2023-10-19') AS date_difference;
+
+#Given a date '2023-03-23', write the query to add 10 days to it.
+select adddate('2023-03-23',10);
+
+#Given a date '2023-03-23', get the month number from it
+select month('2023-03-23');
+
+
+
+
+
+
+
+
 
 
 
