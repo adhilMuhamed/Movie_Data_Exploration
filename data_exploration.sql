@@ -95,6 +95,108 @@ select adddate('2023-03-23',10);
 #Given a date '2023-03-23', get the month number from it
 select month('2023-03-23');
 
+#Pull a list of the first name, last name, and email of each customer in order to send a mailer to all your staff members to notify them regarding a management change.
+select first_name,last_name,email from customer;
+
+#Display all the cities in India
+select * from city;
+select * from country;
+
+select  c.city from city c join country co on c.country_id=co.country_id where co.country='India';
+
+#Display the names of actors and the names of the films they have acted in.
+select * from actor;
+select * from film_actor;
+select * from film;
+
+select a.first_name, f.title from actor a join film_actor fa on a.actor_id=fa.actor_id join film f on fa.film_id=f.film_id;
+
+#Display the film names and the category of the films they fall into.
+select * from film;
+select * from film_category;
+select * from category;
+
+select f.title, c.name from film f join film_category fc on f.film_id=fc.film_id join category c on fc.category_id=c.category_id;
+
+#Display all number of films in the category ‘Action’
+select * from film;
+select * from film_category;
+select * from category;
+
+select f.title,c.name from film f join film_category fc on f.film_id=fc.film_id join category c on fc.category_id=c.category_id where c.name='action';
+
+#Display the list of films, their actors where the length of the film is greater than 100 mins
+select * from film;
+select * from film_actor;
+select * from actor;
+
+SELECT 
+    f.title,a.first_name
+FROM
+    film f
+        JOIN
+    film_actor fa ON f.film_id = fa.film_id
+    join 
+    actor a on fa.actor_id=a.actor_id
+       where f.length>100;
+       
+       
+#Display all the actor’s names who worked in either Animation or Children movies
+select * from film;
+select * from film_category;
+select * from category;
+select * from film_actor;
+select * from actor;
+
+SELECT 
+    first_name, last_name
+FROM
+    film f
+        INNER JOIN
+    film_actor fa ON f.film_id = fa.film_id
+        INNER JOIN
+    film_category fc ON f.film_id = fc.film_id
+        INNER JOIN
+    category c ON fc.category_id = c.category_id
+        INNER JOIN
+    actor aa ON aa.actor_id = fa.actor_id
+WHERE
+    name = 'Animation' OR name = 'Children';
+    
+    
+#Display the cities from India whose names start with ‘B’
+select  c.city from city c join country co on c.country_id=co.country_id where co.country='India' AND c.city like "B%";
+
+#Display all the customers whose name starts with A and lives in India
+select * from customer;
+select * from country;
+select * from address;
+
+SELECT 
+    first_name, last_name, CITY, country
+FROM
+    customer c
+        INNER JOIN
+    address a ON c.address_id = a.address_id
+        INNER JOIN
+    city ON a.city_id = city.city_id
+        INNER JOIN
+    country ON city.country_id = country.country_id
+WHERE
+    country = 'INDIA'
+        AND first_name LIKE 'A%';
+        
+#Display the count of addresses in Australia
+SELECT 
+    COUNT(*) as count
+FROM
+    address a
+        INNER JOIN
+    city ci ON a.city_id = ci.city_id
+        INNER JOIN
+    country co ON ci.country_id = co.country_id
+WHERE
+    country = 'Australia';
 
 
 
