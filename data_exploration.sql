@@ -197,6 +197,99 @@ FROM
     country co ON ci.country_id = co.country_id
 WHERE
     country = 'Australia';
+    
+#Display the names of customers who are from France
+select * from customer;
+select * from address;
+select * from city;
+select * from country;
+
+SELECT 
+    c.first_name
+FROM
+    customer c
+        JOIN
+    address a ON c.address_id = a.address_id
+        JOIN
+    city ci ON a.city_id = ci.city_id
+        JOIN
+    country co ON ci.country_id = co.country_id
+WHERE
+    co.country = 'france';
+
+
+#Display all cities from India which start with the letter A
+select * from city;
+select  c.city from city c join country co on c.country_id=co.country_id where co.country='India' and c.city like "A%";
+
+#Display the names and addresses of the customer whose first name starts with ‘A’ from countries which starts with the letter ‘C‘ and are active.
+select * from customer;
+select * from address;
+select * from city;
+select * from country;
+
+SELECT 
+    c.first_name, a.address
+FROM
+    customer c
+        JOIN
+    address a ON c.address_id = a.address_id
+        JOIN
+    city ci ON a.city_id = ci.city_id
+        JOIN
+    country co ON ci.country_id = co.country_id
+WHERE
+    co.country LIKE 'C%'
+        AND c.first_name LIKE 'A%';
+
+
+#Create a quick reference of a list of distinct titles and their descriptions available in inventory at store 2 to provide easy information about titles.
+select * from film_text;
+select * from inventory;
+
+select distinct(f.title),f.description from film_text f join inventory i on f.film_id=i.film_id where store_id=2;
+
+#List down the managers’ names at each store with the full address of each property
+select * from store;
+select * from staff;
+
+select * from store st join staff sa on st.store_id=sa.store_id join address a on sa.address_id=a.address_id;
+
+#Provide list of each inventory item, including store_id, inventory_id, title, film’s rating, rental rate, and replacement cost
+select * from inventory;
+
+
+select * from inventory i join film f on i.film_id=f.film_id;
+
+#List of all customer names, which store they go to, active or inactive, full address
+SELECT 
+    *
+FROM
+    customer c
+        INNER JOIN
+    store s ON c.store_id = s.store_id
+        INNER JOIN
+    address a ON a.address_id = c.address_id;
+    
+    
+/*Understand the replacement cost of your film — Identify replacement costs for films that are
+1) least expensive to replace,
+2) most expensive to replace, and
+3) the average replacement cost of all the films in store.*/
+
+select min(replacement_cost) as least,max(replacement_cost) as most,avg(replacement_cost) as average from film;
+
+select title from film where replacement_cost=(select min(replacement_cost) from film);
+
+select title from film where replacement_cost=(select max(replacement_cost) from film);
+
+select title from film where replacement_cost=(select avg(replacement_cost) from film);
+
+
+
+
+
+
 
 
 
