@@ -286,6 +286,55 @@ select title from film where replacement_cost=(select max(replacement_cost) from
 select title from film where replacement_cost=(select avg(replacement_cost) from film);
 
 
+#Write a SQL query to count the number of characters except for the spaces for each actor.Return the first 10 actors' name lengths along with their names.
+Select concat(first_name,' ',last_name) as Actor_Name, length(concat(trim(first_name),trim(last_name))) as lengths from actor limit 10;
+
+
+
+#List all Oscar awardees(Actors who received the Oscar award) with their full names and the length of their names.
+select * from actor_award;
+Select concat(first_name,' ',last_name) as Actor_Name, length(concat(first_name,last_name)) as lengths from actor_award where awards not LIKE "%oscar%";
+Select concat(first_name,' ',last_name) as Actor_Name, awards from actor_award where awards LIKE "%,%";
+Select concat(first_name,' ',last_name) as Actor_Name,  awards from actor_award where awards like "%oscar%" or awards like "%emmy%";
+
+#Find the actors who have acted in the film ‘Frost Head.’
+select * from film where title='frost head';
+select * from film_actor where film_id=341;
+Select * from actor;
+
+select concat(first_name,' ',last_name) as Actor_Name from film f join film_actor fa on f.film_id=fa.film_id join actor a on fa.actor_id=a.actor_id where title='frost head';
+
+#Pull all the films acted by the actor ‘Will Wilson.’
+select * from actor where first_name='will';
+select * from film_actor where actor_id=168;
+select * from film;
+
+select title  from film f join film_actor fa on f.film_id=fa.film_id join actor a on fa.actor_id=a.actor_id where first_name='will' AND last_name='wilson';
+
+#Pull all the films which were rented and return them in the month of May.
+select * from rental;
+select * from film;
+select * from inventory;
+
+select title from rental r join inventory i on r.inventory_id=i.inventory_id join film f on i.film_id=f.film_id where month(rental_date)=5 and month(return_date)=5;
+
+
+#Pull all the films with ‘Comedy’ category.
+select * from film;
+select * from category;
+select * from film_category;
+
+select title,name from film f join film_category fc on f.film_id=fc.film_id join category c on fc.category_id=c.category_id where name='Comedy';
+
+
+
+
+
+
+
+
+
+
 
 
 
