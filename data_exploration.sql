@@ -326,7 +326,33 @@ select * from film_category;
 
 select title,name from film f join film_category fc on f.film_id=fc.film_id join category c on fc.category_id=c.category_id where name='Comedy';
 
+#Get the customers whose first name starts with a vowel and ends with a consonant. 
+select first_name from customer where first_name regexp '^[aeiou]' and first_name regexp '[^aeiou]$';
 
+##Get the movies which has gold in its title. 
+select * from film where title regexp 'gold';
+
+#Get the customer first and last name whose postal code starts with 9 and ends with 5. 
+select * from address;
+select * from customer;
+
+select c.first_name,c.last_name from customer c join address a on c.address_id=a.address_id where a.postal_code regexp '^9' and a.postal_code regexp '5$' ;
+
+#Get the films which are based on the subject ‘student’ 
+
+select * from film where description regexp 'student';
+
+#Find the customers whose last name does not contain w, j and b characters 
+
+select last_name from customer where last_name regexp '[^wjb]';
+
+#ind the customers whose address starts with 1 and ends with parkway 
+
+select * from address;
+
+select c.first_name,c.last_name,a.address from customer c join address a on c.address_id=a.address_id where a.address regexp '^1' and a.address regexp 'parkway$' ;
+
+select c.first_name,c.last_name,a.address from customer c join address a on c.address_id=a.address_id where a.address regexp '^1.*parkway$' ;
 
 
 
