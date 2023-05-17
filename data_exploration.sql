@@ -355,8 +355,42 @@ select c.first_name,c.last_name,a.address from customer c join address a on c.ad
 select c.first_name,c.last_name,a.address from customer c join address a on c.address_id=a.address_id where a.address regexp '^1.*parkway$' ;
 
 
+#Write a query to group the rental data by customer_id. 
+
+select customer_id,count(rental_id) as count from rental group by customer_id;
+
+#Modify the above query to order the customers based on the number of rentals in descending order. 
+
+select customer_id,count(rental_id) as rental_count from rental group by customer_id order by rental_count desc;
+
+# Write a query to count the number of payments made by each customer. Show the customer id, the number of rentals and the total amount paid for each customer. 
+
+select customer_id,count(rental_id) as rental_count , sum(amount) as total_amount from payment group by customer_id;
+
+# Modify the above query to include only those customers who have made at least 20 payments. 
+
+select customer_id,(rental_id) as rental_count , sum(amount) as total_amount from payment group by customer_id having count(payment_id)>20;
+
+#Write a query to find the number of films acted by each actor_id using film_actor table
+
+select actor_id,count(film_id) as film_count from film_actor group by actor_id;
+
+#Write a query to find the total number of films acted by each actor grouped by the film rating. 
+select * from film_actor;
+select * from actor;
+select * from film;
+
+select a.actor_id,rating,count(f.film_id) as rating_count from film f join film_actor fa on f.film_id=fa.film_id join actor a on fa.actor_id=a.actor_id group by f.rating,a.actor_id order by actor_id;
 
 
+#Using roll up, modify the above query to find the total count for each distinct actor i.e. find the total number of films each actor has acted along with the count of different ratings. 
+
+
+select actor_id,rating,count(*) from film_actor fa join film f on fa.film_id=f.film_id group by actor_id,rating with rollup;
+
+#Write a query to group the rentals by year and count them.
+
+select year(rental_date),rental_date,count(*) from rental group by year(rental_date),date(rental_date) with rollup;
 
 
 
