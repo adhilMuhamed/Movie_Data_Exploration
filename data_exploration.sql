@@ -393,17 +393,63 @@ select actor_id,rating,count(*) from film_actor fa join film f on fa.film_id=f.f
 select year(rental_date),rental_date,count(*) from rental group by year(rental_date),date(rental_date) with rollup;
 
 
+#Construct a query against the film table that uses a filter condition with a noncorrelated subquery against the category table to find all Horror films.
+
+select * from film;
+select * from category;
+select * from film_category;
+
+select title from film where film_id IN (select film_id from film_category where category_id IN(select category_id from category where name='horror'));
 
 
+# Write a query that returns all cities that are not in China. 
+
+select * from city;
+select * from country;
+
+select * from city where country_id != (select country_id from country where country='china');
+
+#Write a query that returns all cities that are in India or Pakistan.
+
+select * from city where country_id IN (select country_id from country where country='india' or country='pakistan');
+
+# Write a query to find all customers who have never gotten a free film rental. (ie the zero amount paid for a rental). Use the all operator. 
+
+select * from rental;
+select * from customer;
+select * from film;
+select * from payment;
+ 
+select * from customer where customer_id not in (select customer_id from payment where amount=0);
+
+#Write a query to count the number of film rentals for each customer and the containing query then retrieves those customers who have rented exactly 30 films.
+
+select * from rental;
+select * from customer;
+select * from film;
+select * from payment;
+
+select * from customer where customer_id in
+(select customer_id from (select customer_id,count(rental_id) as rental_count from rental group by customer_id having rental_count=30) as t);
+
+select * from customer c
+where (select count(*) from rental r where r.customer_id = c.customer_id) = 30;
+
+#Write a query to find all customers whose total payments for all film rentals are between 100 and 150 dollars.
+select * from payment;
+select * from customer;
+
+select * from customer c
+where (select sum(amount) from payment p where p.customer_id = c.customer_id) 
+between 100 and 150;
+
+# Write a query to find all the customers who rented at least one film prior to June 01 2005 without regard for how many films were rented. 
+
+select * from rental;
 
 
-
-
-
-
-
-
-
+select * from customer c
+where exists  (select * from rental r where r.customer_id = c.customer_id and date(r.rental_date)< '2005-06-01');
 
 
 
