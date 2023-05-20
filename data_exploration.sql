@@ -451,6 +451,49 @@ select * from rental;
 select * from customer c
 where exists  (select * from rental r where r.customer_id = c.customer_id and date(r.rental_date)< '2005-06-01');
 
+#Construct a query against the film table that uses a filter condition with a correlated subquery against the category table to find all Horror films.
+
+Select f.title
+From film f
+Where exists
+(select 1
+From film_category fc inner join category c
+On fc.category_id = c.category_id
+Where c.name = 'Horror'
+And fc.film_id = f.film_id);
+
+
+#Write a query to generate a list of customer IDs along with the number of film rentals and the total payments.
+
+Select c.first_name, c.last_name, pymnt.num_rentals, pymnt.tot_payments
+From customer c
+Inner join
+(select customer_id,
+count(*) num_rentals, sum(amount) tot_payments from payment
+Group by customer_id
+) pymnt
+On c.customer_id = pymnt.customer_id;
+
+
+#Write a query to find the titles of all the films that have never been rented out.
+
+select * from film f
+where film_id not in
+(select distinct film_id from inventory);
+
+#Write a query to find the names of all the customers who rented out a film that was also rented out by the customer with customer_id 20.
+select * from inventory;
+
+select first_name, last_name from customer where customer_id in(
+select customer_id from rental r join inventory i on r.inventory_id=i.inventory_id
+where film_id in (
+select film_id from rental r join inventory i on r.inventory_id=i.inventory_id
+where customer_id=20
+) and customer_id<>20
+);
+
+
+
 
 
 
