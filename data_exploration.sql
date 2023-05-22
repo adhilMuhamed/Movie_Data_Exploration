@@ -492,14 +492,112 @@ where customer_id=20
 ) and customer_id<>20
 );
 
+#Write a query to generate a value for the activity_type column which returns the string “Active” or “Inactive” depending on the value of the customer.active column
 
 
+select *,
+case 
+when active=1 then "Active"
+when active=0 then "Inactive"
+end as activity_type
+ from customer;
+ 
+ #Write a query to retrieve the number of rentals for each active customer. For inactive customers the result should be 0. Use case expression and correlated subquery.
 
 
+select * from rental;
+select * from customer;
 
+select *,
+case active
+when 0 then 0
+else
+(select count(*) from rental r where r.customer_id=c.customer_id)
+end as no_of_rentals
+from customer c;
 
+#Write a query to show the number of film rentals for May, June and July of 2005 in a single row.
 
+select
+sum(case month(rental_date) when 5 then 1 else 0 end ) may_count,
+sum(case month(rental_date) when 6 then 1 else 0 end ) june_count,
+sum(case month(rental_date) when 7 then 1 else 0 end ) july_count
+from rental;
 
+/*Write a query to categorize films based on the inventory level. (15 min)
+If the count of copies is 0 then ‘Out of stock’
+If the count of copies is 1 or 2  then ‘Scarce’
+If the count of copies is 3 or 4 then ‘Available’
+If the count of copies is >= 5 then ‘Common’
+*/
+
+select * from inventory;
+select * from rental;
+
+select *,
+case
+when inv_count=0 then 'out of stock'
+when inv_count IN (1,2) then 'scarce'
+when inv_count IN (3,4) then 'available'
+when inv_count>=5 then 'common'
+end as inv_level
+ from (select film_id,count(inventory_id) as inv_count from inventory group by film_id) AS T;
+ 
+ #Write a query to get each customer along with their total payments, number of payments and average payment
+
+Select c.first_name, c.last_name,
+sum(p.amount) tot_payment,
+count(p.amount) num_payments,
+sum(p.amount) /
+Case when count(p.amount) = 0 then 1
+Else count(p.amount)
+End avg_payment
+From customer c
+Left join payment p
+On c.customer_id = p.customer_id
+Group by c.first_name, c.last_name;
+
+#Write a query to create a single row containing the number of films based on the ratings (G, PG and NC17)
+
+select 
+sum(case rating when 'g'  then 1 else 0 end) AS G_rating,
+sum(case rating when 'PG'  then 1 else 0 end) AS PG_rating,
+sum(case rating when 'NC17'  then 1 else 0 end) AS NC17_rating
+ from film;
+
+#Create a CTE with two named subqueries.
+#The first one gets the actors with last names starting with s. The second one gets all the pg films acted by them. Finally show the film id and title.
+
+select * from actor;
+select * from film_actor;
+select * from film;
+
+with
+actor_s as( select * from actor where last_name like 's%'),
+pg_films_actor_s as(
+select a.actor_id, f.film_id, title, rating, first_name,last_name from film f join film_actor fa on f.film_id=fa.film_id
+join actor_s a on a.actor_id=fa.actor_id
+where rating='pg'
+)
+select * from pg_films_actor_s;
+
+#Add one more subquery to the previous CTE to get the revenues of those movies
+
+with
+actor_s as( select * from actor where last_name like 's%'),
+pg_films_actor_s as(
+select a.actor_id, f.film_id, title, rating, first_name,last_name from film f join film_actor fa on f.film_id=fa.film_id
+join actor_s a on a.actor_id=fa.actor_id
+where rating='pg'
+),
+revenue as(
+select f.film_id,title,sum(amount) as rev from
+inventory i join pg_films_actor_s f on f.film_id=i.film_id
+join rental r on r.inventory_id=i.inventory_id
+join payment p on p.rental_id=r.rental_id
+group by f.film_id, title
+)
+select film_id, title, rev from revenue;
 
 
 
