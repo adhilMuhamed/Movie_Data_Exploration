@@ -600,15 +600,88 @@ group by f.film_id, title
 select film_id, title, rev from revenue;
 
 
+#Create a temporary table that contains information about all the customers who live in the United Kingdom. Include the following information: customer ID, first name, last name, and email address
+
+select * from customer;
+select * from city;
+select * from address;
+select * from country;
+
+create temporary table cc_uk as(
+select c.customer_id,c.first_name,c.last_name,c.email from customer c join address a on c.address_id=a.address_id join city ci on a.city_id=ci.city_id join country co on ci.country_id=co.country_id where country='United Kingdom');
+
+
+#Create a temporary table that contains the rental duration (in days) for each rental. Include the following information: rental ID, inventory ID, customer ID, rental date, return date, and rental duration
+
+select * from rental;
+
+
+create temporary table rent_dur as(
+select rental_id,inventory_id,customer_id,rental_date,return_date,datediff(return_date,rental_date) as rental_duration from rental);
+
+
+#Create a view that will show the film, its category and the actors name. Filter the results for the actor whose first name = ‘Nick’.
+
+
+select * from film;
+select * from category;
+select * from film_category;
+select * from film_actor;
+select * from actor;
+
+
+create view f_actor as(
+select first_name,last_name,title,name from actor a join film_actor fa on a.actor_id=fa.actor_id join film f on fa.film_id=f.film_id join film_category fc on f.film_id=fc.film_id join category c on fc.category_id=c.category_id); 
+
+select * from f_actor where first_name='Nick';
+
+
+#Create a view to get the details of customers with their phone numbers masked.
+
+select * from customer;
+select * from address;
 
 
 
+create view cust_details as(
+select c.customer_id, first_name, last_name,
+concat(substr(phone,1,2),'*******', substr(phone, -2,2)) as phno
+from customer c join address a on c.address_id=a.address_id);
+
+
+#Write a query to print even numbers from 10 to 20
+
+
+with recursive even_num as(select 10 as num union select num+2 as num from even_num where num<20)
+select * from even_num;
+
+
+#Write a query to print odd numbers from 25 to 35
+
+with recursive odd_num(n) as(select 25  union select n+2 as num from odd_num where n<35)
+select * from odd_num;
+
+
+#Draw the triangle 
+#*
+#**
+#***
+#****
+#*****
+
+with recursive star as (select cast('*' as char(10)) as num union select concat(num,'*') as num from star where length(num)<5)
+select * from star ;
+
+
+#Create a view for inactive customers
+
+create view inactive_cust as(
+select * from customer where active=0);
 
 
 
+#Create a view for films with rating pg
 
 
-
-
-
-
+create view pg_rate as (
+select * from film where rating='pg');
