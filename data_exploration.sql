@@ -685,3 +685,22 @@ select * from customer where active=0);
 
 create view pg_rate as (
 select * from film where rating='pg');
+
+
+
+#Create an index on email column in the customer table of maven movies database
+select * from customer;
+
+
+Create Index em_in on customer(email);
+
+# Delete the index created in the above task.
+
+alter table customer
+drop index em_in;
+
+#Add a multicolumn index on actor table on both first and last name columns
+
+Select * from actor;
+
+create index fl_idx on actor(first_name,last_name);
